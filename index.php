@@ -1,7 +1,3 @@
-<?php
-include 'cart.php';
-?>
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,6 +6,11 @@ include 'cart.php';
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
+
+  <?php
+  include 'cart-menu.php';
+  ?>
+
     <section class="products">
       <h1>Featured Products</h1>
       <?php

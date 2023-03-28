@@ -1,15 +1,14 @@
 <?php
-include 'cart.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_start();
-}
-
+include "cart-processing.php";
 require_once '../vendor/autoload.php';
 require_once '../secrets.php';
 
+session_start();
+
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 header('Content-Type: application/json');
+
 
 $stripe = $_SESSION['stripe-client'];
 
@@ -29,4 +28,3 @@ $checkout_session = \Stripe\Checkout\Session::create([
 
 header("HTTP/1.1 303 See Other");
 header("Location: " . $checkout_session->url);
-?>

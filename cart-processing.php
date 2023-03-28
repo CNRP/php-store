@@ -1,5 +1,5 @@
 <?php
-include "php/utils.php";
+
 require_once "../vendor/autoload.php";
 require_once "../secrets.php";
 
@@ -124,60 +124,44 @@ class Cart
       }
       return $checkout_cart;
     }
+    public function getCartTotal(){
+        $total = 0;
+        foreach ($this->products as $value) {
+            $total += $value['quantity'] * $value['price'];
+        }
+        return $total;
+    }
+
+    public function getHTML(){
+        $html = "";
+        foreach ($this->products as $value) {
+            // console_log($_SESSION["cart"]->getListItems());
+            $selectOptions = "<select onChange='selectSelected(this.value)'>";
+            for ($i = 1; $i <= $value["cart-max"]; $i++) {
+                $selectOptions .= "
+                <option value='?changeQuantity=" . $value["id"]
+                . "&value=" . $i . "'"
+                . ($i == $value['quantity'] ? ' selected' : '')
+                . ">". $i. "</option>";
+            }
+            $selectOptions .= "</select>";
+
+            $html .=
+            '<li>
+              <img src="' . $value["image"] .'">
+              <div class="cart_details">
+                  <h5>' .$value["name"] .'</h5>
+                  <div class="cart_controls">
+                      <p>£' .  $value["price"] * $value["quantity"] .'</p>
+                      <div class="cart_quantity">
+                          <a class="button load-cart" href="?subtract=' . $value["id"] .'"> - </a>
+                          ' . $selectOptions . '
+                          <a class="button load-cart" href="?add=' . $value["id"] .'"> + </a>
+                      </div>
+                  </div>
+              </div>
+            </li>';
+        }
+        return $html;
+    }
 }
-?>
-<section class="cart_menu">
-      <div class="cart_list">
-        <ul>
-          <div class="loading" id="loading-cart">
-            <div class="loader"></div>
-          </div>
-          <?php if (isset($_SESSION["cart"])) {
-              $array = $_SESSION["cart"]->getCart();
-              $html = "<li><h3>Basket (" . sizeof($array) . " Items)</h3></li>";
-
-              $cartTotal = 0;
-              foreach ($array as $value) {
-                // console_log($_SESSION["cart"]->getListItems());
-                  $selectOptions = "<select onChange='selectSelected(this.value)'>";
-                  for ($i = 1; $i <= $value["cart-max"]; $i++) {
-                      $selectOptions .= "
-                      <option value='?changeQuantity=" . $value["id"]
-                      . "&value=" . $i . "'"
-                      . ($i == $value['quantity'] ? ' selected' : '')
-                      . ">". $i. "</option>";
-                  }
-                  $selectOptions .= "</select>";
-
-                  $cartTotal += $value["price"] * $value["quantity"];
-                  $html .=
-                  '<li>
-                    <img src="' . $value["image"] .'">
-                    <div class="cart_details">
-                        <h5>' .$value["name"] .'</h5>
-                        <div class="cart_controls">
-                            <p>£' .  $value["price"] * $value["quantity"] .'</p>
-                            <div class="cart_quantity">
-                                <a class="button load-cart" href="?subtract=' . $value["id"] .'"> - </a>
-                                ' . $selectOptions . '
-                                <a class="button load-cart" href="?add=' . $value["id"] .'"> + </a>
-                            </div>
-                        </div>
-                    </div>
-                  </li>';
-              }
-              // echo $html;
-          } ?>
-        </ul>
-        <div class="cart_total">
-          <h4>Basket Total </h4>
-          <p> £</p>
-        </div>
-      </div>
-      <div class="cart_buttons">
-        <a href='?emptyCart=true' class="button load-cart">Empty Basket</a>
-        <form action="/checkout.php" method="POST">
-            <button type="submit" class="button load-cart" id="checkout-button">Checkout</button>
-        </form>
-      </div>
-</section>
