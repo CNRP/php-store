@@ -1,15 +1,7 @@
 <?php
 include 'cart.php';
-session_start();
 
-function console_log($output, $with_script_tags = true) {
-  $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
-');';
-  if ($with_script_tags) {
-      $js_code = '<script>' . $js_code . '</script>';
-  }
-  echo $js_code;
-}
+session_start();
 
 require_once '../vendor/autoload.php';
 require_once '../secrets.php';
