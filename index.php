@@ -3,23 +3,68 @@
   <head>
     <title>Buy cool new product</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/fa/css/all.min.css">
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
-
   <?php
+
   include 'cart-menu.php';
+  include 'php/navigation.php';
+
+  if (session_status() == PHP_SESSION_NONE) {
+      session_start();
+  }
+
+  if (!isset($_SESSION['cart'])) {
+      $_SESSION["cart"] = new Cart();
+  }
+
   ?>
+
 
     <section class="products">
       <h1>Featured Products</h1>
       <?php
         $html = "";
-
-        $array = $stripe->products->all();
+        // console_log($_SESSION['cart']->inCart());
+        $array = $stripe->products->all(['limit' => 12]);
         foreach ($array as $value) {
-          // console_log($value);
           $price = number_format($stripe->prices->retrieve($value['default_price'])['unit_amount'] / 100, 2, '.', '');
+          $cart_controls = '';
+          if(isset($_SESSION['cart'])){
+            if(!$_SESSION['cart']->inCart($value['id'])){
+              $cart_controls = '
+              <div class="cart_buttons flex-center">
+                <a class="add_to_cart button load-add" href="product.php?id='.$value['id'].'">See More</a><a class="add_to_cart button load-add" data-product="'.$value['id'].'" href="?addToCart='.$value['id'].'"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-cart-shopping"></i></a>
+              </div>';
+            }else{
+              $selectOptions = "";
+              $item = $_SESSION['cart']->getItem($value['id']);
+
+              $max = 5;
+              if(isset($item['cart-max'])){
+                $max = $item['cart-max'];
+              }
+              // console_log($item['cart-max']);
+              for ($i = 1; $i <= $max; $i++) {
+                $selectOptions .= "<option value='?changeQuantity=" . $value["id"]. "&value=" . $i . "'". ($i == $item['quantity'] ? ' selected' : ''). ">". $i. "</option>";
+              }
+              
+              $cart_controls = '
+              <div class="cart_buttons flex-center">
+                  <a class="add_to_cart button load-add" href="product.php?id='.$value['id'].'">See More</a>
+                  <div class="cart_quantity">
+                    <a class="button load-add" href="?subtract=' . $value["id"] .'"  data-product="'.$value['id'].'" > <i class="fa-solid fa-minus"></i> </a>
+                      <select onChange="selectSelected(this.value)">
+                      ' . $selectOptions . '
+                      </select>
+                    <a class="button load-add" href="?add=' . $value["id"] .'"  data-product="'.$value['id'].'" > <i class="fa-solid fa-plus"></i> </a>
+                  </div>
+              </div>';
+            }
+          }
+
           $html .= '
             <div class="product">
               <div class="loading" id="loading-'.$value['id'].'">
@@ -30,10 +75,8 @@
                   <h3>'.$value['name'].'</h3>
                   <p>'.$value['description'].'</p>
               </div>
-              <div class="cart">
-                <h5>£'. $price .'</h5>
-                <a class="add_to_cart button load-add" data-product="'.$value['id'].'" href="?addToCart='.$value['id'].'">Add to cart</a>
-              </div>
+              <h5>£'. $price .'</h5>
+              '.$cart_controls.'
             </div>
           ';
         }

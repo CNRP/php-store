@@ -1,8 +1,10 @@
 body {
+  margin: 0;
+  margin-top: 6em;
   background: #f1f1f1;
   font-family: var(--font-1);
   height: 100vh;
-  margin: 0;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -22,7 +24,7 @@ body {
 .products{
   margin-block: 2em;
   margin-inline: auto;
-  width: 60%;
+  width: 65%;
   justify-content: space-around;
   display: flex;
   flex-wrap: wrap;
@@ -96,21 +98,17 @@ body {
   overflow: hidden;
 }
 
-.cart .add_to_cart{
-  background-color: var(--button-colour);
-  color: black;
-}
-
-.cart h5{
+.product h5{
   font-size: 1.2rem;
   color: rgb(0, 78, 0);
   margin-block-start: 1em;
   margin-block-end: 1em;
 }
 
-.cart_buttons{
-  display: flex;
-  margin: 2em;
+
+.cart_buttons .add_to_cart{
+  background-color: var(--button-colour);
+  color: black;
 }
 
 .cart_menu{
@@ -127,7 +125,7 @@ body {
 -moz-box-shadow: -15px 15px 46px -34px rgba(0,0,0,0.85);
 }
 
-.cart_list{    
+.cart_list{
   width: 100%;
   right: 2em;
   top: 2em;
@@ -135,6 +133,9 @@ body {
 
 .cart_list ul{
   position: relative;
+  max-height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .cart_list ul li{
@@ -171,17 +172,32 @@ body {
   color:rgb(0, 78, 0);
 }
 
-.cart_controls .cart_quantity{
+.cart_buttons{
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-.cart_controls select{
+.cart_buttons a, .cart_buttons select{
+  font-size: 0.9rem !important;
+}
+
+.cart_quantity{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart_quantity select, .cart_controls select{
   border: 1px solid rgb(238, 238, 238);
   background-color: rgb(221, 221, 221);
   padding: 0.5em;
   border-radius: 0px;
-  margin-inline: 0.5em;
+}
+
+.cart_quantity select{
+  padding: 0.9em;
+  border-radius: 5px;
 }
 
 .cart_details{
@@ -192,16 +208,18 @@ body {
   width: 100%;
 }
 
-.cart_details h5{
-  font-size: 1.1rem;
-  padding-bottom: 0.5em;
+.cart_header {
+  width: 100%;
 }
 
 .cart_total{
   font-size: 1.2rem;
   text-align: right;
-  margin-top: 2em;
-  margin-inline: 2em;
+}
+
+.cart_header, .cart_total{
+  padding: 1em 2em;
+  background-color: rgb(245, 245, 245);
 }
 
 .cart_total p{
@@ -218,6 +236,10 @@ body {
   border-radius: 5px;
   font-size: 1rem;
   border: 1px solid rgb(238, 238, 238);
+}
+
+button i, a i{
+  pointer-events: none;
 }
 
 .button:hover{

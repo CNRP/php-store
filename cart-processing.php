@@ -135,16 +135,10 @@ class Cart
     public function getHTML(){
         $html = "";
         foreach ($this->products as $value) {
-            // console_log($_SESSION["cart"]->getListItems());
-            $selectOptions = "<select onChange='selectSelected(this.value)'>";
+            $selectOptions = "";
             for ($i = 1; $i <= $value["cart-max"]; $i++) {
-                $selectOptions .= "
-                <option value='?changeQuantity=" . $value["id"]
-                . "&value=" . $i . "'"
-                . ($i == $value['quantity'] ? ' selected' : '')
-                . ">". $i. "</option>";
+                $selectOptions .= "<option value='?changeQuantity=" . $value["id"]. "&value=" . $i . "'". ($i == $value['quantity'] ? ' selected' : ''). ">". $i. "</option>";
             }
-            $selectOptions .= "</select>";
 
             $html .=
             '<li>
@@ -154,14 +148,24 @@ class Cart
                   <div class="cart_controls">
                       <p>£' .  $value["price"] * $value["quantity"] .'</p>
                       <div class="cart_quantity">
-                          <a class="button load-cart" href="?subtract=' . $value["id"] .'"> - </a>
-                          ' . $selectOptions . '
-                          <a class="button load-cart" href="?add=' . $value["id"] .'"> + </a>
+                          <a class="button load-cart" href="?subtract=' . $value["id"] .'"> <i class="fa-solid fa-minus"></i> </a>
+                            <select onChange="selectSelected(this.value)">
+                            ' . $selectOptions . '
+                            </select>
+                          <a class="button load-cart" href="?add=' . $value["id"] .'"> <i class="fa-solid fa-plus"></i> </a>
                       </div>
                   </div>
               </div>
             </li>';
         }
         return $html;
+    }
+
+    public function inCart($id){
+        return array_key_exists($id, $this->products);
+    }
+
+    public function getItem($id){
+        return $this->products[$id];
     }
 }
