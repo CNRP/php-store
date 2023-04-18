@@ -1,4 +1,7 @@
 <?php 
+define('WEBROOT', 'D:/xampp/htdocs/php-store');
+include_once WEBROOT."/cart-processing.php";
+
 function console_log($output, $with_script_tags = true) {
     $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
   ');';

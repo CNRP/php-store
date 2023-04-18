@@ -25,13 +25,15 @@ body {
   margin-block: 2em;
   margin-inline: auto;
   width: 65%;
-  justify-content: space-around;
+  gap: 0em 0.6em;
+  justify-content: flex-start;
   display: flex;
   flex-wrap: wrap;
 }
 
 .products h1{
   width: 100%;
+  margin-block: 1em;
 }
 
 .product{

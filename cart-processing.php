@@ -1,7 +1,7 @@
 <?php
-
-require_once "../vendor/autoload.php";
-require_once "../secrets.php";
+require_once dirname(WEBROOT)."/vendor/autoload.php";
+require_once dirname(WEBROOT)."/secrets.php";
+include_once WEBROOT."/php/utils.php";
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();

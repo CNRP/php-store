@@ -1,6 +1,5 @@
 <?php
-include "php/utils.php";
-include "cart-processing.php";
+
 ?>
 
 <section id="cart" class="cart_menu">

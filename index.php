@@ -8,7 +8,8 @@
   </head>
   <body>
   <?php
-
+  
+  include 'php/utils.php';
   include 'cart-menu.php';
   include 'php/navigation.php';
 

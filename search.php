@@ -3,15 +3,17 @@
   include 'cart-menu.php';
 
 if (isset($_GET["search"])) {
-    $results = $stripe->products->search(['query' => 'name:\''.$_GET["search"].'\'']);
+    $results = [];
+    $results = array_merge($results,(array) $stripe->products->search(['query' => 'name:\''.$_GET["search"].'\''])['data']);
+    $results = array_merge($results, (array) $stripe->products->search(['query' => 'description:\''.$_GET["search"].'\''])['data']);
+    $results = array_unique($results);
+    // console_log($results);
 }else if(isset($_SESSION["search"])){
     $results = $_SESSION["search"];
 }
 else{
     $results = $stripe->products->all(['limit' => 1])['data'][0];
 }
-
-// $price = number_format($stripe->prices->retrieve($product['default_price'])['unit_amount'] / 100, 2, '.', '');
 
 ?>
 <!DOCTYPE html>
@@ -29,8 +31,8 @@ else{
         <?php
             $html = "";
             // console_log($_SESSION['cart']->inCart());
-            $array = $results['data'];
-            foreach ($array as $value) {
+
+            foreach ($results as $value) {
             $price = number_format($stripe->prices->retrieve($value['default_price'])['unit_amount'] / 100, 2, '.', '');
             $cart_controls = '';
             if(isset($_SESSION['cart'])){

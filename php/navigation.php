@@ -1,12 +1,21 @@
 <section class="navigation">
     <ul>
-        <li><a href="index.php">Home</a></li>
+        <li><a href="/index.php">Home</a></li>
     </ul>
     <div class="right">
         <form action="/search.php">
             <input type="text" placeholder="Search.." name="search">
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>
+        <?php if(isset($_SESSION['user'])){?>
+            <button onclick="window.location.href='/account.php';" id="cart-toggle" class="" onclick="toggleNav()">
+                <p>Account <i class="fa-solid fa-user"></i></p>
+            </button>
+        <?php }else {?>
+            <a href="/auth/login.php" class="button">
+                Login <i class="fa-solid fa-user"></i>
+            </a>
+        <?php }?>
         <button id="cart-toggle" onclick="toggleNav()">
             <p>
             <?php
@@ -20,14 +29,6 @@
         </button>
     </div>
 </section>
-
-<script>
-    function toggleNav() {
-        console.log("YTOOYOO")
-        var element = document.getElementById("cart");
-        element.classList.toggle("visible");
-    }
-</script>
 
 <style>
 .cart_menu{
