@@ -1,9 +1,6 @@
 <?php
-include '../php/utils.php';
+include '../php/header.php';
 require '../auth/db.php';
-
-
-include WEBROOT.'/cart-menu.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -14,8 +11,6 @@ if (!isset($_SESSION['cart'])) {
 }
 
 $page_title = "Login / Register";
-include '../php/header.php';
-include_once '../php/navigation.php';
     // When form submitted, check and create user session.
     if (isset($_POST['login_submit'])) {
 

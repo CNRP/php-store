@@ -1,6 +1,6 @@
 <?php
 
-require '../php/utils.php';
+include '../php/header.php';
 
 //include auth_session.php file on all user panel pages
 include "../auth/session.php";
@@ -8,8 +8,6 @@ include "../support/tickets-table.php";
 require '../auth/db.php';
 
 $page_title = "Tickets overview";
-include '../php/header.php';
-include '../php/navigation.php';
 
 if ($_SESSION['user']['user_type'] == 2) {
 ?>

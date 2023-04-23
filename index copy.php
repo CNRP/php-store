@@ -1,19 +1,15 @@
 <?php
-
   $page_title = "Homepage";
   include 'php/header.php';
-  require 'auth/db.php';
-  
 ?>
     <section class="products">
       <h1>Featured Products</h1>
       <?php
         $html = "";
         // console_log($_SESSION['cart']->inCart());
-        // $array = $stripe->products->all(['limit' => 12]);
-        $array = $mysqli->query("SELECT * FROM `products` ORDER BY `created_at` DESC");
+        $array = $stripe->products->all(['limit' => 12]);
         foreach ($array as $value) {
-          // console_log($value['id']. ", ".$value['name']. ", ".$value['description']. ", ".$value['default_price']);
+          console_log($value['id']. ", ".$value['name']. ", ".$value['description']. ", ".$value['default_price']);
           $price = number_format($stripe->prices->retrieve($value['default_price'])['unit_amount'] / 100, 2, '.', '');
           $cart_controls = '';
           if(isset($_SESSION['cart'])){
@@ -55,7 +51,7 @@
                 <div class="loader"></div>
               </div>
               <div class="description">
-                <img src="'.$value['image_url'].'" alt="The cover of Stubborn Attachments" loading="lazy"/>
+                <img src="'.$value['images'][0].'" alt="The cover of Stubborn Attachments" />
                   <h3>'.$value['name'].'</h3>
                   <p>'.$value['description'].'</p>
               </div>

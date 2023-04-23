@@ -12,5 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
     loadCart();
   }));
 
+  toggleNav();
 }, false);
 
+function toggleNav() {
+  const obj = document.getElementById("cart");
+      if (obj.style.transform === "translateX(200%)") {
+          console.log("1");
+          obj.style.opacity = "1";
+          obj.style.transform = "translateX(0)";
+      } else {
+          console.log("2");
+          obj.style.opacity = "0";
+          obj.style.transform = "translateX(200%)";
+      }
+  }

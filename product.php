@@ -1,7 +1,6 @@
 <?php
-
-  include 'cart-menu.php';
-
+$page_title = "Product Details";
+include 'php/header.php';
 if (isset($_GET["id"])) {
     $product = $stripe->products->retrieve(
         $_GET["id"],
@@ -18,16 +17,6 @@ else{
 $price = number_format($stripe->prices->retrieve($product['default_price'])['unit_amount'] / 100, 2, '.', '');
 
 ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Buy cool new product</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/fa/css/all.min.css">
-    <script src="https://js.stripe.com/v3/"></script>
-  </head>
-    <body>
-        <?php include 'php/navigation.php' ?>
         <style>
             .product-page{
                 background-color: white;
@@ -125,6 +114,4 @@ $price = number_format($stripe->prices->retrieve($product['default_price'])['uni
             loading.classList.add('show');
             }
         </script>
-        <script src="script.js"></script>
-    </body>
-</html>
+  <?php include 'php/footer.php';?>

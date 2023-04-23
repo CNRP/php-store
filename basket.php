@@ -1,10 +1,14 @@
 <?php
 require_once dirname(WEBROOT)."/vendor/autoload.php";
 require_once dirname(WEBROOT)."/secrets.php";
-include_once WEBROOT."/php/utils.php";
+require WEBROOT.'/auth/db.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
+}
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION["cart"] = new Cart();
 }
 
 $stripe = \Stripe\Stripe::setApiKey($stripeSecretKey);
@@ -17,11 +21,10 @@ $stripe = $_SESSION["stripe-client"];
 
 if (isset($_GET["addToCart"])) {
     if (!isset($_SESSION["cart"])) {
-        console_log("NEW CART");
         $_SESSION["cart"] = new Cart();
     }
 
-    $_SESSION["cart"]->addToCart($stripe);
+    $_SESSION["cart"]->addToCart($mysqli);
 }
 
 if (isset($_GET["subtract"])) {
@@ -56,28 +59,28 @@ class Cart
         return $this->products;
     }
 
-    public function addToCart($stripe)
+    public function addToCart($mysqli)
     {
-        if ($stripe !== null) {
-            $product = $stripe->products->retrieve($_GET["addToCart"], []);
-
-            $this->products[$_GET["addToCart"]] ??= [
-                "id" => $_GET["addToCart"],
-                "quantity" => 1,
-                "name" => $product["name"],
-                "description" => $product["description"],
-                "price" => number_format(
-                    $stripe->prices->retrieve($product["default_price"])[
-                        "unit_amount"
-                    ] / 100,
-                    2,
-                    ".",
-                    ""
-                ),
-                "price-id" => $product["default_price"],
-                "image" => $product["images"][0],
-                "cart-max" => 5,
-            ];
+        if ($mysqli !== null) {
+            $stmt = $mysqli->prepare("SELECT * FROM `products` WHERE `id`=?");
+            $stmt->bind_param("s", $_GET["addToCart"]);
+            // Execute query
+            if ($stmt->execute()) {
+                $result = mysqli_stmt_get_result($stmt);
+                while ($product = mysqli_fetch_assoc($result)){
+                    console_log($stmt);
+                    $this->products[$_GET["addToCart"]] ??= [
+                        "id" => $_GET["addToCart"],
+                        "quantity" => 1,
+                        "name" => $product["name"],
+                        "description" => $product["description"],
+                        "price" => $product["price_value"],
+                        "price-id" => $product["default_price"],
+                        "image" => $product["image_url"],
+                        "cart-max" => 5,
+                    ];
+                }
+            }
         }
     }
 
@@ -168,4 +171,7 @@ class Cart
     public function getItem($id){
         return $this->products[$id];
     }
-}
+}    
+
+include WEBROOT.'/basket_menu.php'; 
+?>

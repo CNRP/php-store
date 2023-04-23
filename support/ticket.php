@@ -1,5 +1,5 @@
 <?php
-include "../php/utils.php";
+include "../php/header.php";
 
 //include auth_session.php file on all user panel pages
 include "../auth/session.php";
@@ -47,9 +47,7 @@ if ($user_id == $_SESSION["user"]["id"] or $_SESSION["user"]["user_type"] == 2) 
     $alert_text = ($ticket["status"] == "closed" ? "This ticket has been marked as closed, if your issue wasnt resolved feel free to open another ticket." : "");
     $alert_text = ($ticket["status"] == "resolved" ? "This ticket has been marked as resolved, if you need help with another issue feel free to open another ticket." : $alert_text);
 }
-$page_title = "Ticket";
-include '../php/header.php';
-include "../php/navigation.php"; ?>
+?>
 
     <div class="content">
         <h1>Your support ticket</h1>
