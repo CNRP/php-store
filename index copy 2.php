@@ -1,22 +1,23 @@
 <?php
   $page_title = "Homepage";
-  include 'php/header.php';
+  include 'general/header.php';
 ?>
     <section class="products">
       <h1>Featured Products</h1>
       <?php
         $html = "";
         // console_log($_SESSION['cart']->inCart());
-        $array = $stripe->products->all(['limit' => 12]);
+        // $array = $stripe->products->all(['limit' => 12]);
+        $array = $mysqli->query("SELECT * FROM `products` ORDER BY `created_at` DESC");
         foreach ($array as $value) {
-          console_log($value['id']. ", ".$value['name']. ", ".$value['description']. ", ".$value['default_price']);
+          // console_log($value['id']. ", ".$value['name']. ", ".$value['description']. ", ".$value['default_price']);
           $price = number_format($stripe->prices->retrieve($value['default_price'])['unit_amount'] / 100, 2, '.', '');
           $cart_controls = '';
           if(isset($_SESSION['cart'])){
             if(!$_SESSION['cart']->inCart($value['id'])){
               $cart_controls = '
               <div class="cart_buttons flex-center">
-                <a class="add_to_cart button load-add" href="product.php?id='.$value['id'].'">See More</a><a class="add_to_cart button load-add" data-product="'.$value['id'].'" href="?addToCart='.$value['id'].'"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-cart-shopping"></i></a>
+                <a class="add_to_cart button load-add" href="/products/item.php?id='.$value['id'].'">See More</a><a class="add_to_cart button load-add" data-product="'.$value['id'].'" href="?addToCart='.$value['id'].'"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-cart-shopping"></i></a>
               </div>';
             }else{
               $selectOptions = "";
@@ -33,7 +34,7 @@
               
               $cart_controls = '
               <div class="cart_buttons flex-center">
-                  <a class="add_to_cart button load-add" href="product.php?id='.$value['id'].'">See More</a>
+                  <a class="add_to_cart button load-add" href="/products/item.php?id='.$value['id'].'">See More</a>
                   <div class="cart_quantity">
                     <a class="button load-add" href="?subtract=' . $value["id"] .'"  data-product="'.$value['id'].'" > <i class="fa-solid fa-minus"></i> </a>
                       <select onChange="selectSelected(this.value)">
@@ -51,7 +52,7 @@
                 <div class="loader"></div>
               </div>
               <div class="description">
-                <img src="'.$value['images'][0].'" alt="The cover of Stubborn Attachments" />
+                <img src="'.$value['image_url'].'" alt="The cover of Stubborn Attachments" loading="lazy"/>
                   <h3>'.$value['name'].'</h3>
                   <p>'.$value['description'].'</p>
               </div>
@@ -75,4 +76,4 @@
       </script>
 
     </section>
-  <?php include 'php/footer.php';?>
+  <?php include 'general/footer.php';?>

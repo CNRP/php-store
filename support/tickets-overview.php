@@ -1,6 +1,6 @@
 <?php
 
-include '../php/header.php';
+include '../general/header.php';
 
 //include auth_session.php file on all user panel pages
 include "../auth/session.php";
@@ -39,4 +39,4 @@ if ($_SESSION['user']['user_type'] == 2) {
     </div>
 <?php 
 }
-    include '../php/footer.php';?>
+    include '../general/footer.php';?>

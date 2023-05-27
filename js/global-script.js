@@ -18,12 +18,20 @@ document.addEventListener("DOMContentLoaded", function () {
 function toggleNav() {
   const obj = document.getElementById("cart");
       if (obj.style.transform === "translateX(200%)") {
-          console.log("1");
           obj.style.opacity = "1";
           obj.style.transform = "translateX(0)";
       } else {
-          console.log("2");
           obj.style.opacity = "0";
           obj.style.transform = "translateX(200%)";
       }
+  }
+
+  function selectSelected(value){
+    loadCart();
+    if (value) window.location.href=value;
+  }
+
+  function loadCart(){
+    var loading = document.getElementById("loading-cart");
+    loading.classList.add('show');
   }

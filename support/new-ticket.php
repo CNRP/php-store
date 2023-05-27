@@ -1,18 +1,12 @@
 <?php
-include '../php/utils.php';
-include '../php/navigation.php';
-include "../auth/session.php";
-require '../auth/db.php';
-
-
-$page_title = "Create a new ticket";
-include '../php/header.php';
-include '../php/navigation.php';
-
     // When form submitted, insert values into the database.
     if (isset($_GET['submitId'])) {
+        include "../auth/session.php";
+        require '../auth/db.php';
+
+        $display_id = rand(10000,99999);
         $stmt = $mysqli->prepare("INSERT INTO tickets (display_id, user_id, order_number, category, subject) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('sssss', rand(10000,99999), $_SESSION['user']['id'], $_POST['order_number'], $_POST['category'], $_POST['subject']);
+        $stmt->bind_param('sssss', $display_id, $_SESSION['user']['id'], $_POST['order_number'], $_POST['category'], $_POST['subject']);
 
         // Execute query
         if ($stmt->execute()) {
@@ -26,8 +20,13 @@ include '../php/navigation.php';
             // Registration failed
             $error = 'Failed to submit ticket. Please try again later';
         }
+        
+        $page_title = "Create a new ticket";
+        include '../general/header.php';
 
     } else {
+        $page_title = "Create a new ticket";
+        include '../general/header.php';
 ?>
 <div class="page-container">
     <div class="form-container">
@@ -52,5 +51,5 @@ include '../php/navigation.php';
 </div>
 <?php
     }
-include 'php/footer.php';
+include '../general/footer.php';
 ?>

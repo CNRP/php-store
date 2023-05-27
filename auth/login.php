@@ -1,5 +1,5 @@
 <?php
-include '../php/header.php';
+include '../general/header.php';
 require '../auth/db.php';
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -126,5 +126,5 @@ $page_title = "Login / Register";
     </div>
 <?php
     }
-include '../php/footer.php';
+include '../general/footer.php';
 ?>

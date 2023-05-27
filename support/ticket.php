@@ -1,5 +1,5 @@
 <?php
-include "../php/header.php";
+include "../general/header.php";
 
 //include auth_session.php file on all user panel pages
 include "../auth/session.php";
@@ -17,7 +17,7 @@ if(isset($_GET["status_set"]) && $_SESSION["user"]["user_type"] == 2){
     $stmt->bind_param("si", $_GET["status_set"], $_GET["id"]);
     // Execute query
     if ($stmt->execute()) {
-        header("Location: ../support_ticket.php".$url);
+        header("Location: ../support/ticket.php".$url);
         exit;
     } else {
         // Registration failed
@@ -37,7 +37,7 @@ if ($user_id == $_SESSION["user"]["id"] or $_SESSION["user"]["user_type"] == 2) 
         $stmt->bind_param('sss', $_SESSION['user']['id'], $_POST['message'], $ticket["id"] );
         $stmt->execute();
 
-        header("Location: ../support_ticket.php?id=" . $ticket["id"]);
+        header("Location: ../support/ticket.php?id=" . $ticket["id"]);
     }
 
     $ticket_messages = $mysqli->query("SELECT * FROM `ticket_messages` WHERE ticket_id=" . $_GET["id"] . " ORDER BY `created_at` DESC");
@@ -105,4 +105,4 @@ if ($user_id == $_SESSION["user"]["id"] or $_SESSION["user"]["user_type"] == 2) 
         </div>
         <p class="link"><a href="../account.php">Back to account</a></p>
     </div>
-<?php include '../php/footer.php';?>
+<?php include '../general/footer.php';?>
