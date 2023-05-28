@@ -1,5 +1,8 @@
 # php-store
 
+Live Demo:
+[php-store.connorprice.info](http://php-store.connorprice.info)
+
 Php ecommerce store-front with stripe intergration 
 
 - Checkout with Stripe 
