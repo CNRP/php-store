@@ -1,11 +1,11 @@
 <?php
 
-
 $page_title = "Order Placed";
 include '../general/header.php';
 require WEBROOT.'/auth/db.php';
 
 try {
+
   $session = $stripe->checkout->sessions->retrieve($_GET['session_id']);
   $line_items = $stripe->checkout->sessions->allLineItems($_GET['session_id'], ['limit' => 5]);
 
@@ -21,30 +21,37 @@ try {
   $result = $stmt->get_result();
   if ($result->num_rows > 0) {
     // order with the same ID already exists, handle the error here
-    echo "Error: Order with ID $order_id already exists.";
+    $error = "Error: Order with ID $order_id already exists.";
   } else {
     $display_id = rand(10000,99999);
     // order with the same ID doesn't exist, insert the new order
     $stmt = $mysqli->prepare("INSERT INTO orders (id, display_id, user_id) VALUES (?, ?, ?)");
     $stmt->bind_param("sii", $order_id, $display_id, $user_id);
     if ($stmt->execute()) {
-      echo "New order created successfully.";
-      foreach ($line_items['data'] as $item) {
-        $stmt = $mysqli->prepare("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->bind_param("sii", $order_id, $product_id, $quantity);
-        $product_id = $item['price']['product'];
-        $quantity = $item['quantity'];
-        $stmt->execute();
-      }
-
+      $error = "New order created successfully.";
     } else {
-      echo "Error creating order: " . $stmt->error;
+      $error = "Error creating order: " . $stmt->error;
+    }
+
+    foreach ($line_items['data'] as $item) {
+      $product_id = $item['price']['product'];
+      $quantity = $item['quantity'];
+      $price = number_format($stripe->prices->retrieve( $item['price']['id'])['unit_amount'] / 100, 2, '.', '');
+      $stmt = $mysqli->prepare("INSERT INTO order_items (order_id, product_id, price_value, quantity) VALUES (?, ?, ?, ?)");
+      $stmt->bind_param("ssdi", $order_id, $product_id, $price, $quantity);
+      if ($stmt->execute()) {
+        $error = "New order created successfully.";
+      } else {
+        $error = "Error creating order: " . $stmt->error;
+      }
     }
   }
+
 } catch (Error $e) {
   echo json_encode(['error' => $e->getMessage()]);
 }
 
+  echo '<div class="notification"><p>'.$error.'</p></div>';
 ?>
   <section class="content">
       <h1>Order Placed!</h1>

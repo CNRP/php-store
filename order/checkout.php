@@ -6,7 +6,7 @@ include "basket.php";
 header('Content-Type: application/json');
 $stripe = $_SESSION['stripe-client'];
 
-$YOUR_DOMAIN = 'http://localhost/';
+$YOUR_DOMAIN = 'http://store.localhost/';
 $checkout_cart = [];
 
 if (isset($_SESSION['cart'])){

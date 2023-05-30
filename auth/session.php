@@ -4,6 +4,8 @@
     }
     if(!isset($_SESSION["user"])) {
         header("Location: /auth/login.php");
+        // echo '<script>window.location.href = "/auth/login.php";</script>';
+
         exit();
     }
 ?>

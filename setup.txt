@@ -36,13 +36,6 @@ CREATE TABLE IF NOT EXISTS `ticket_messages` (
  PRIMARY KEY (`id`)
 );
 
-CREATE TABLE ticket_numbers (
-  ticket_number VARCHAR(10) NOT NULL,
-  ticket_id INT(11) NOT NULL,
-  PRIMARY KEY (ticket_number),
-  FOREIGN KEY (ticket_id) REFERENCES tickets(id)
-);
-
 CREATE TABLE products (
   id VARCHAR(50) NOT NULL,
   name VARCHAR(255),
@@ -53,4 +46,24 @@ CREATE TABLE products (
   created_at DATETIME DEFAULT NOW(),
   updated_at DATETIME DEFAULT NOW(),
   PRIMARY KEY (id)
+);
+
+CREATE TABLE orders (
+  id VARCHAR(100) NOT NULL,
+  display_id varchar(7) NOT NULL,
+  user_id int(11) NOT NULL,
+  created_at DATETIME DEFAULT NOW(),
+  status varchar(10) DEFAULT 'placed',
+  FOREIGN KEY (user_id) REFERENCES users(id),
+);
+
+cs_test_a1HlmLVM6Ez3pnKGEbLSMTvP7BCs8H29TgVoLQCPmEBUsdr4sMLjHfGMhe
+
+CREATE TABLE order_items (
+  order_id VARCHAR(100) NOT NULL,
+  product_id VARCHAR(50) NOT NULL,
+  price_value FLOAT(7) NOT NULL,
+  quantity INT(3) NOT NULL, 
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
 );

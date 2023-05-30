@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/assets/fa/css/all.min.css">
     <link rel="stylesheet" href="/css/support/style.css" />
     <?php
-        $pages = array('tickets-overview.php', 'account.php', 'ticket.php', 'list.php', 'view.php', 'placed.php');
+        $pages = array('tickets-overview.php', 'account.php', 'ticket.php', 'list.php', 'view.php', 'placed.php', 'table.php');
         if (in_array(basename($_SERVER['PHP_SELF']), $pages)):
     ?>
         <link rel="stylesheet" href="/css/support/table-style.css" />

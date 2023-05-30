@@ -38,17 +38,17 @@ $page_title = "Login / Register";
                     'created_at' => $row['created_at'],
                     'user_type' => $row['user_type'],
                 ];
-                header("Location: ../account.php");
+                echo '<script>window.location.href = "../account.php";</script>';
                 exit;
             } else {
                 // Invalid password
-                $error = 'Invalid password';
+                $error = 'Invalid Password';
             }
         } else {
             // User not found
-            $error = 'Invalid email';
+            $error = 'Invalid Email';
         }
-        echo $error;
+        echo "<div class='error'><p>".$error."</p><a href='/auth/login.php'>Back to login</a></div>";
         // Close database connection
         $mysqli->close();
 
@@ -58,72 +58,86 @@ $page_title = "Login / Register";
         $email = $_POST['email'];
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
-        // Validate user input
-        if (empty($first_name) || empty($last_name) ||empty($email) || empty($password) || empty($confirm_password)) {
-            $error = 'All fields are required';
-        } elseif ($password != $confirm_password) {
-            $error = 'Passwords do not match';
+
+        // Check if the email already exists in the database
+        $checkQuery = "SELECT * FROM users WHERE email = ?";
+        $checkStmt = $mysqli->prepare($checkQuery);
+        $checkStmt->bind_param("s", $email);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
+
+        if ($checkResult->num_rows > 0) {
+            // Email already exists, display an error message to the user
+            $error = 'Email already exists. Please choose a different email.';
         } else {
-            // Hash password
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-            // Prepare SQL statement
-            $stmt = $mysqli->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
-
-            // Bind parameters
-            $stmt->bind_param('ssss', $first_name, $last_name, $email, $hashed_password);
-
-            // Execute query
-            if ($stmt->execute()) {
-                // Registration successful
-                header('Location: ../account.php');
-                exit;
+            // Email doesn't exist, proceed with registration
+            // Validate user input
+            if (empty($first_name) || empty($last_name) ||empty($email) || empty($password) || empty($confirm_password)) {
+                $error = 'All fields are required';
+            } elseif ($password != $confirm_password) {
+                $error = 'Passwords do not match';
             } else {
-                // Registration failed
-                $error = 'Registration failed. Please try again later.';
-            }
-            // Close database connection
-            $mysqli->close();
+                // Hash password
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+                // Prepare SQL statement
+                $stmt = $mysqli->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+
+                // Bind parameters
+                $stmt->bind_param('ssss', $first_name, $last_name, $email, $hashed_password);
+
+                // Execute query
+                if ($stmt->execute()) {
+                    // Registration successful
+                    echo '<script>window.location.href = "../account.php";</script>';
+                    exit;
+                } else {
+                    // Registration failed
+                    $error = 'Registration failed. Please try again later.';
+                }
+                // Close database connection
+                $mysqli->close();
+
+            }
         }
+        echo "<div class='error'><p>".$error."</p><a href='/auth/login.php'>Back to login</a></div>";
     } else {
 ?>
-    <div class="page-container">
-        <div class="form-container">
-
-            <div class="form-toggles">
-                <div>
-                    <a class="toggle-forms-button disabled" id="login-toggle" href="#">Login</a>
-                    <a class="toggle-forms-button" id="register-toggle" href="#">Register</a>
-                </div>
-                <div id="line"></div>
+<div class="page-container">
+    <div class="form-container">
+        <div class="form-toggles">
+            <div>
+                <a class="toggle-forms-button disabled" id="login-toggle" href="#">Login</a>
+                <a class="toggle-forms-button" id="register-toggle" href="#">Register</a>
             </div>
-
-            <form class="auth" id="login" method="post" name="login">
-                <input type="text" class="login-input" name="email" placeholder="Email" autofocus="true" required="true"/>
-                <input type="password" class="login-input" name="password" placeholder="Password" required="true"/>
-                <input type="submit" value="Login" name="login_submit" class="form-button" required="true"/>
-                <p class="link"><a href="registration.php">New Registration</a></p>
-            </form>
-
-            <form class="auth hidden visually-hidden" id="register" method="post" name="register">
-                <div class="input-group">
-                    <input class="first_name_input" type="text" name="first_name" placeholder="First name" required />
-                    <input type="text" name="last_name" placeholder="Last name" required />
-                </div>
-                <input type="text" id="email" name="email" placeholder="Email Adress">
-                <label id="email_alert" class="alert hidden" for="password">Email not valid format</label>
-                <div class="input-group">
-                    <input class="password_input" type="password" name="password" id="password" required placeholder="Password">
-                    <input type="password" name="confirm_password" id="confirm_password" required placeholder="Password">
-                </div>
-                <label id="password_alert_1" class="alert hidden" for="password">Passwords must match</label>
-                <label id="password_alert_2" class="alert hidden" for="password">Must be atleast 6 characters, 1 uppercase 1 number and a special character</label>
-                <input id="register_submit" type="submit" name="register_submit" value="Register" class="form-button">
-                <p class="link"><a href="login.php">Have an account? Click here to Login.</a></p>
-            </form>
+            <div id="line"></div>
         </div>
+
+        <form class="auth" id="login" method="post" name="login">
+            <input type="text" class="login-input" name="email" placeholder="Email" autofocus="true" required="true" autocomplete="email"/>
+            <input type="password" class="login-input" name="password" placeholder="Password" required="true" autocomplete="current-password"/>
+            <input type="submit" value="Login" name="login_submit" class="form-button" required="true"/>
+            <p class="link"><a href="registration.php">New Registration</a></p>
+        </form>
+
+        <form class="auth hidden visually-hidden" id="register" method="post" name="register">
+            <div class="input-group">
+                <input class="first_name_input" type="text" name="first_name" placeholder="First name" required autocomplete="given-name"/>
+                <input type="text" name="last_name" placeholder="Last name" required autocomplete="family-name"/>
+            </div>
+            <input type="email" id="email" name="email" placeholder="Email Adress" autocomplete="email"/>
+            <label id="email_alert" class="alert hidden" for="password">Email not valid format</label>
+            <div class="input-group">
+                <input class="password_input" type="password" name="password" id="password" required placeholder="Password" autocomplete="new-password"/>
+                <input type="password" name="confirm_password" id="confirm_password" required placeholder="Password" autocomplete="new-password"/>
+            </div>
+            <label id="password_alert_1" class="alert hidden" for="password">Passwords must match</label>
+            <label id="password_alert_2" class="alert hidden" for="password">Must be at least 6 characters, 1 uppercase, 1 number, and a special character</label>
+            <input id="register_submit" type="submit" name="register_submit" value="Register" class="form-button">
+            <p class="link"><a href="login.php">Have an account? Click here to Login.</a></p>
+        </form>
     </div>
+</div>
 <?php
     }
 include '../general/footer.php';

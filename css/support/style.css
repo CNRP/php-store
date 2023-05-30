@@ -20,20 +20,11 @@
     background-color: rgb(173, 173, 173);
 }
 
-.page-container{
-    top:0;
-    left:0;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100%;
-}
-
 .form-container{
     --colour: var(--gradient);
-    width: 600px;
+    margin-inline: auto;
+    margin-block: 20em;
+    width: min(600px, 100%);
     max-width: 100%;
     display: flex;
     flex-direction: column;
@@ -44,9 +35,6 @@
 }
 
 @media screen and (max-width: 600px) {
-    .form-container{
-        width: 100%;
-    }
   }
 
 .auth .alert{
@@ -219,6 +207,7 @@ form.search .form-button{
 .link a {
     color: #666;
 }
+
 
 .content{
     padding: 3em;

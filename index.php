@@ -35,7 +35,7 @@
   </div>
   <div class="featured-products">
     <h2>Featured</h2>
-    <div class="featured-product-cards">
+    <div class="card-grid">
     <?php
       foreach ($array as $value) {
         // console_log($value['id']. ", ".$value['name']. ", ".$value['description']. ", ".$value['default_price']);
@@ -52,7 +52,16 @@
                   <p><?php echo $value['description'] ?></p>
               </div>
               <h5>£<?php echo $price ?></h5>
-              '.$cart_controls.'
+              <div class="cart_buttons flex-center">
+                  <a class="add_to_cart button load-add" href="/products/item.php?id=<?php echo $value['id'] ?>">See More</a>
+                  <div class="cart_quantity">
+                    <a class="button load-add" href="?subtract='<?php echo $value["id"] ?>"  data-product="<?php echo $value['id']?>" > <i class="fa-solid fa-minus"></i> </a>
+                      <select onChange="selectSelected(this.value)">
+                      ' . $selectOptions . '
+                      </select>
+                    <a class="button load-add" href="?add='<?php echo $value["id"] ?>"  data-product="<?php echo $value['id'] ?>"> <i class="fa-solid fa-plus"></i> </a>
+                  </div>
+              </div>
           </div>
         </div>
       <?php

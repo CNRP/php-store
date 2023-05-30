@@ -28,7 +28,6 @@
         $page_title = "Create a new ticket";
         include '../general/header.php';
 ?>
-<div class="page-container">
     <div class="form-container">
         <form class="auth" action="?submitId=true" method="post">
             <h1 class="login-title">Submit a support ticket</h1>
@@ -48,7 +47,6 @@
             <p class="link"><a href="account.php">Back to account</a></p>
         </form>
     </div>
-</div>
 <?php
     }
 include '../general/footer.php';

@@ -1,9 +1,9 @@
 <?php 
 $page_title = "Account View";
+
 include 'general/header.php';
 include "auth/session.php";
-include "support/tickets-table.php";
-include 'order/table.php';
+// include "support/tickets-table.php";
 
 $id = $_SESSION['user']['id'];
 
@@ -16,11 +16,10 @@ $page_title = "Account View";
         <p>Account Created: <span class="censor"> <?php echo $_SESSION['user']['created_at']?></span></p>
         <h2>Your Orders</h2>
         <?php 
-            $buttons = generate_action_button("", "order/view.php", "fa-right-from-bracket") . generate_action_button("", "hello", "fa-trash"); 
-            echo generate_table("SELECT id, display_id, created_at, status FROM `orders` WHERE user_id=$id ORDER BY `created_at` ASC", $mysqli, true, false)?>
+            $buttons = generate_action_button("", "order/view.php", "fa-right-from-bracket"); 
+            echo generate_table("SELECT id, display_id, created_at, status FROM `orders` WHERE user_id=$id ORDER BY `created_at` ASC", $mysqli, false, $buttons)
+            ?>
 
-
-            $array = $stripe->Orders
         <h2>Your support tickets</h2>
         
         <?php 

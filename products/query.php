@@ -2,8 +2,7 @@
 
 $page_title = "Search for product";
 include '../general/header.php';
-require '../auth/db.php';
-include '../general/navigation.php';
+include "../auth/session.php";
 
     $results = [];
     if (isset($_GET["search"])) {
@@ -17,11 +16,10 @@ include '../general/navigation.php';
         $results = $mysqli->query("SELECT * FROM `products`");
     }
     ?>
-    <section class="products">
-        <h1>Featured Products</h1>
+    <section class="all-products card-grid">
+        <h1>Products</h1>
         <?php
-        foreach ($results as $value) {            
-            $price = number_format($stripe->prices->retrieve($value['default_price'])['unit_amount'] / 100, 2, '.', '');
+        foreach ($results as $value) {           
         ?>
         <div class="product">
             <div class="loading" id="loading-<?php echo $value['id'] ?>">
@@ -32,7 +30,7 @@ include '../general/navigation.php';
                 <h3><?php echo $value['name'] ?></h3>
                 <p><?php echo $value['description'] ?></p>
             </div>
-            <h5>£<?php echo $price ?></h5>
+            <h5>£<?php echo $value['price_value'] ?></h5>
             
             <?php             
             $cart_controls = '';
@@ -69,25 +67,11 @@ include '../general/navigation.php';
                                 <i class="fa-solid fa-plus"></i> 
                             </a>
                         </div>
-                    </div>';
+                    </div>
                 <?php 
                 } 
             } ?>
         </div>
         <?php } ?>
-        <script>
-            function selectSelected(value){
-                loadCart();
-                if (value) window.location.href=value;
-            }
-
-            function loadCart(){
-                var loading = document.getElementById("loading-cart");
-                loading.classList.add('show');
-            }
-        </script>
-
         </section>
-        <script src="script.js"></script>
-    </body>
-</html>
+        <?php include '../general/footer.php';?>

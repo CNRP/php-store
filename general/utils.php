@@ -20,10 +20,8 @@ function generate_table($sql, $mysqli, $showID = false, $buttons = false) {
     if($field_info->name != 'id'){
       console_log($field_info->name);
       $headers[] = $field_info->name;
-    }else{
-      if($showID){
-        $headers[] = $field_info->name;
-      }
+    }else if($showID){
+      $headers[] = $field_info->name;
     }
   }
   $header_html = "";
